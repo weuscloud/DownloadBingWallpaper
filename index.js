@@ -22,7 +22,7 @@
         try {
             return document.getElementsByClassName("img_cont")[0]
         } catch (e) {
-            console.error("DOM中没有目标元素")
+            throw("getBingTargetImg-DOM中没有目标元素img_cont")
         }
     }
     function debounce(fn, ms) {
