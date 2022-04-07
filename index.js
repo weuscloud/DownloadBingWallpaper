@@ -75,7 +75,7 @@
          return url;
        }//'https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg'
        let URLhead='https://s.cn.bing.net'
-      url=URLhead+url;
+       url=URLhead+url;
       return url
      }
     function getIMG(url){
@@ -84,7 +84,7 @@
       return new Promise(r=>{
         fetch(url).then((res)=>{
             res.arrayBuffer().then((data)=>{
-                let type="imgage/*"
+                let type="image/*"
                 let blob=new Blob([data],{type})
                 r(blob)
             })
