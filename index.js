@@ -88,7 +88,7 @@
             var save_link = document.createElement("a");
 
             save_link['href'] = urlObject.createObjectURL(fileObject);
-            save_link['download'] = getImgName()+ ".jpg";
+            save_link['download'] = getImgName();
             save_link.click();
     }
 })();
