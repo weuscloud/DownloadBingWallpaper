@@ -11,13 +11,20 @@
 
 (function() {
     'use strict';
-    let bingTargetImg,keyMap=new Map()
+    let keyMap=new Map()
     window.addEventListener("load",function(){
-        bingTargetImg= document.getElementsByClassName("img_cont")[0]
-        if(bingTargetImg){
+    
+        if(getBingTargetImg()){
             start()
         }
     })
+    function getBingTargetImg(){
+        try{
+          return  document.getElementsByClassName("img_cont")[0]
+        }catch(e){
+            console.error("DOM中没有目标元素")
+        }
+    }
     function debounce(fn,ms){
         let timer
         if(typeof 
@@ -54,7 +61,7 @@
             })
     }
     function getImgURL(){
-       let imgStr=bingTargetImg.style.backgroundImage
+       let imgStr=getBingTargetImg().style.backgroundImage
        //let imgStr='url("https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
        let reg=/"(https?:\/\/[\w.]+\/?\S*)"/
        let res=reg.exec(imgStr)
@@ -75,12 +82,12 @@
     })
    }
    function getImgName(){
-        let imgStr=bingTargetImg.style.backgroundImage
+        let imgStr=getBingTargetImg().style.backgroundImage
         //let imgStr='url("https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
         let reg=/"https?:\/\/[\w.]+\/?\S*id=(\S*)&rf\S*"/
         let res=reg.exec(imgStr)
-        let time=new Date().getTime()
-        let name=res?.[1]||time
+        let defaultName=new Date().getTime()+".jpg"
+        let name=res?.[1]||defaultName
         return name
    }
     function save(fileObject){
