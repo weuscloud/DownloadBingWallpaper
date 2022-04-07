@@ -11,18 +11,47 @@
 
 (function() {
     'use strict';
-    let bingTargetImg
+    let bingTargetImg,keyMap=new Map()
     window.addEventListener("load",function(){
         bingTargetImg= document.getElementsByClassName("img_cont")[0]
         if(bingTargetImg){
             start()
         }
     })
+    function debounce(fn,ms){
+        let timer
+        if(typeof 
+            fn!=="function"&&
+            typeof ms!=="number"){
+                return ()=>{
+                    console.log("[wrong arguments detected] --debounce")
+                }
+        }
+
+        return function task(...args){
+            
+            if(!timer){
+                fn(...args)
+                timer=window.setTimeout(()=>{
+                    timer=null
+                },ms)
+            }
+        }
+    }
     function start(){
-     let url=getImgURL()
-     getIMG(url).then((data)=>{
-        save(data)
-     }) 
+     keyMap.set("F9",download)
+     window.addEventListener("keyup",debounce((e)=>{
+        let f=keyMap.get(e.code)
+        if(typeof f==="function"){
+            f()
+        }
+     },1000)) 
+    }
+    function download(){
+        let url=getImgURL()
+            getIMG(url).then((data)=>{
+            save(data)
+            })
     }
     function getImgURL(){
        let imgStr=bingTargetImg.style.backgroundImage
@@ -45,13 +74,21 @@
         })
     })
    }
-
+   function getImgName(){
+        let imgStr=bingTargetImg.style.backgroundImage
+        //let imgStr='url("https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
+        let reg=/"https?:\/\/[\w.]+\/?\S*rf=(\S*)"/
+        let res=reg.exec(imgStr)
+        let time=new Date().getTime()
+        let name=res?.[1]||time
+        return name
+   }
     function save(fileObject){
         var urlObject = window.URL || window.webkitURL || window;
             var save_link = document.createElement("a");
 
             save_link['href'] = urlObject.createObjectURL(fileObject);
-            save_link['download'] = new Date().getTime() + ".jpg";
+            save_link['download'] = getImgName();
             save_link.click();
     }
 })();
