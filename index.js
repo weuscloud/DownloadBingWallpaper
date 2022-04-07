@@ -61,13 +61,23 @@
             })
     }
     function getImgURL(){
-       let imgStr=getBingTargetImg().style.backgroundImage
-       //let imgStr='url("https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
-       let reg=/"(https?:\/\/[\w.]+\/?\S*)"/
-       let res=reg.exec(imgStr)
-       let url=res?.[1]||""
-       return url
-    }
+        let url
+        //let imgStr=getBingTargetImg().style.backgroundImage
+        let imgStr='url("https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
+        //let imgStr='url("/th?id=OHR.Godafoss_ZH-CN9460037606_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
+    
+        let rawURL=imgStr.match(/^url\("(\S*)"\)/)
+        if(!rawURL)throw("很抱歉，似乎没有办法提取URL");
+        
+        url=rawURL[1]||"";
+       
+       if( url.match(/^https?\S*\.jpg/)){
+         return url;
+       }//'https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg'
+       let URLhead='https://s.cn.bing.net'
+      url=URLhead+url;
+      return url
+     }
     function getIMG(url){
        //img对象，file对象，base64，canvas对象相互转换以及图片压缩
        //https://www.cnblogs.com/lwxiao/p/10519617.html
@@ -82,14 +92,15 @@
     })
    }
    function getImgName(){
-        let imgStr=getBingTargetImg().style.backgroundImage
-        //let imgStr='url("https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg")'
-        let reg=/"https?:\/\/[\w.]+\/?\S*id=(\S*)&rf\S*"/
-        let res=reg.exec(imgStr)
-        let defaultName=new Date().getTime()+".jpg"
-        let name=res?.[1]||defaultName
-        return name
-   }
+    let imgStr=getImgURL()
+    //let imgStr='https://s.cn.bing.net/th?id=OHR.Malaga_ZH-CN9644862917_1920x1080.jpg&rf=LaDigue_1920x1080.jpg'
+  
+    let res=imgStr.match(/^\S+id=(\S+)&\S+/)
+  
+    let name=res?.[1]
+    if(!name)throw ("getImgName-failed!")
+    return name
+  }
     function save(fileObject){
         var urlObject = window.URL || window.webkitURL || window;
             var save_link = document.createElement("a");
