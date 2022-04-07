@@ -51,7 +51,7 @@
             var save_link = document.createElement("a");
 
             save_link['href'] = urlObject.createObjectURL(fileObject);
-            save_link['download'] = readerConfig.productName + ".zip";
+            save_link['download'] = new Date().getTime() + ".jpg";
             save_link.click();
     }
 })();
