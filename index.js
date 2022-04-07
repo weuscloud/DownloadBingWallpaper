@@ -19,7 +19,10 @@
         }
     })
     function start(){
-     
+     let url=getImgURL()
+     getIMG(url).then((data)=>{
+        save(data)
+     }) 
     }
     function getImgURL(){
        let imgStr=bingTargetImg.style.backgroundImage
@@ -28,5 +31,27 @@
        let res=reg.exec(imgStr)
        let url=res?.[1]||""
        return url
+    }
+    function getIMG(url){
+       //img对象，file对象，base64，canvas对象相互转换以及图片压缩
+       //https://www.cnblogs.com/lwxiao/p/10519617.html
+      return new Promise(r=>{
+        fetch(url).then((res)=>{
+            res.arrayBuffer().then((data)=>{
+                let type="imgage/*"
+                let blob=new Blob([data],{type})
+                r(blob)
+            })
+        })
+    })
+   }
+
+    function save(fileObject){
+        var urlObject = window.URL || window.webkitURL || window;
+            var save_link = document.createElement("a");
+
+            save_link['href'] = urlObject.createObjectURL(fileObject);
+            save_link['download'] = readerConfig.productName + ".zip";
+            save_link.click();
     }
 })();
